@@ -2,6 +2,10 @@
 
 Course overview and materials for the Agentic AI Bootcamp.
 
+## Notes
+
+- [Excalidraw notes](https://excalidraw.com/#json=FNoolQF6aZ44SojXavarb,No8nz36EE30RN9VAPLpu8A)
+
 ## Structure
 
 - `week-01/` — Intro, prompting, agents
