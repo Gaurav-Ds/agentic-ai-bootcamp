@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>Girl Enjoying Rain - Beautiful Scene</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico&display=swap' rel='stylesheet'>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(to bottom, #bdcfff 0%, #99dbf6 80%, #60a3d9 100%);
+      position: relative;
+      font-family: 'Pacifico', cursive;
+    }
+    .scene {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100vw;
+      height: 90vh;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 2;
+    }
+    .ground {
+      position: absolute;
+      bottom: 0;
+      width: 100vw;
+      height: 160px;
+      background: linear-gradient(to top, #43a047 60%, rgba(67,160,71,0.4) 100%);
+      border-top-left-radius: 80px 90px;
+      border-top-right-radius: 80px 90px;
+      z-index: 0;
+    }
+    .message {
+      position: absolute;
+      top: 32px;
+      width: 100vw;
+      text-align: center;
+      font-size: 2.3rem;
+      color: #354089;
+      letter-spacing: 3px;
+      text-shadow: 0 4px 12px #c3dafc, 0 1px 0 #fff;
+    }
+    .rain {
+      pointer-events: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 3;
+    }
+    /* Subtle puddles */
+    .puddle {
+      position: absolute;
+      bottom: 46px;
+      left: 57%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 36px;
+      background: radial-gradient(ellipse at center, #b2e2fa 62%, #fff0 100%);
+      border-radius: 50% 60%;
+      opacity: 0.61;
+      z-index: 2;
+      filter: blur(1.2px);
+      animation: puddle 2.4s infinite alternate;
+    }
+    @keyframes puddle {
+      to {
+        width: 172px;
+        opacity: 0.48;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class='message'>Enjoy the little moments &mdash; dancing in the rain!</div>
+  <div class='scene'>
+    <!-- SVG Girl with Umbrella for a more appealing look -->
+    <svg width='240' height='380' viewBox='0 0 240 380' fill='none' xmlns='http://www.w3.org/2000/svg'>
+      <!-- Umbrella -->
+      <ellipse cx='120' cy='105' rx='95' ry='38' fill='url(#rainbow)' stroke='#7aa3e1' stroke-width='4'/>
+      <rect x='116' y='138' width='8' height='60' rx='3' fill='#888'/>
+      <!-- Girl's Head -->
+      <ellipse cx='124' cy='150' rx='27' ry='32' fill='#ffe2c4' stroke='#dfa572' stroke-width='2'/>
+      <!-- Hair -->
+      <ellipse cx='124' cy='142' rx='33' ry='25' fill='#502e14' opacity='0.92'/>
+      <!-- Face Smile & Blush -->
+      <ellipse cx='113' cy='153' rx='3' ry='1.5' fill='#fd8f90'/>
+      <ellipse cx='135' cy='153' rx='3' ry='1.5' fill='#fd8f90'/>
+      <path d='M114 164 Q124 172 134 164' stroke='#9e6134' stroke-width='2' fill='none'/>
+      <!-- Eyes -->
+      <ellipse cx='117' cy='150' rx='2' ry='4' fill='#27333b'/>
+      <ellipse cx='131' cy='150' rx='2' ry='4' fill='#27333b'/>
+      <!-- Arms (outstretched, enjoying rain) -->
+      <rect x='63' y='164' width='62' height='10' rx='5' fill='#ffe2c4' transform='rotate(-17 89 172)'/>
+      <rect x='116' y='170' width='62' height='10' rx='5' fill='#ffe2c4' transform='rotate(16 148 175)'/>
+      <!-- Body / Dress -->
+      <rect x='100' y='180' width='48' height='75' rx='24' fill='url(#dress)'/>
+      <!-- Dress Frill -->
+      <ellipse cx='124' cy='253' rx='33' ry='10' fill='#6dd5ed'/>
+      <!-- Legs -->
+      <rect x='113' y='255' width='12' height='70' rx='6' fill='#f1d0a3'/>
+      <rect x='127' y='255' width='12' height='70' rx='6' fill='#f1d0a3'/>
+      <!-- Shoes -->
+      <ellipse cx='119' cy='322' rx='10' ry='5' fill='#2e3092'/>
+      <ellipse cx='133' cy='322' rx='10' ry='5' fill='#2e3092'/>
+      <defs>
+        <radialGradient id='rainbow' cx='0.5' cy='0.45' r='0.9'>
+          <stop offset='0%' stop-color='#ffdddd'/>
+          <stop offset='22%' stop-color='#f7fd8c'/>
+          <stop offset='45%' stop-color='#a2efac'/>
+          <stop offset='66%' stop-color='#a7f0fc'/>
+          <stop offset='83%' stop-color='#60a3d9'/>
+          <stop offset='100%' stop-color='#9687ea'/>
+        </radialGradient>
+        <linearGradient id='dress' x1='100' y1='180' x2='148' y2='255' gradientUnits='userSpaceOnUse'>
+          <stop stop-color='#89f7fe'/>
+          <stop offset='1' stop-color='#66a6ff'/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class='puddle'></div>
+  </div>
+  <div class='ground'></div>
+  <canvas class='rain'></canvas>
+  <script>
+    // Rain animation
+    const canvas = document.querySelector('.rain');
+    const ctx = canvas.getContext('2d');
+    let drops = [];
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    function createDrops() {
+      drops = [];
+      for (let i = 0; i < 160; i++) {
+        drops.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          l: 14 + Math.random() * 24,
+          xs: -0.7 + Math.random() * 1.4,
+          ys: 4 + Math.random() * 5,
+          opacity: 0.7 + Math.random() * 0.3
+        });
+      }
+    }
+    function drawRain() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < drops.length; i++) {
+        let d = drops[i];
+        ctx.globalAlpha = d.opacity;
+        ctx.strokeStyle = '#7ec8e3';
+        ctx.lineWidth = 2 + Math.random() * 1;
+        ctx.beginPath();
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(d.x + d.xs * 2, d.y + d.l);
+        ctx.stroke();
+        d.x += d.xs;
+        d.y += d.ys;
+        if (d.y > canvas.height) {
+          d.x = Math.random() * canvas.width;
+          d.y = -24;
+        }
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(drawRain);
+    }
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createDrops();
+    });
+    resizeCanvas();
+    createDrops();
+    drawRain();
+  </script>
+</body>
+</html>
